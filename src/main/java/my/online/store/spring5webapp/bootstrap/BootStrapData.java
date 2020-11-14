@@ -1,40 +1,50 @@
 package my.online.store.spring5webapp.bootstrap;
 
+import my.online.store.spring5webapp.controllers.OrderController;
 import my.online.store.spring5webapp.domain.LineItem;
 import my.online.store.spring5webapp.domain.MyOrder;
 import my.online.store.spring5webapp.domain.Product;
 import my.online.store.spring5webapp.repositories.LineItemRepository;
-import my.online.store.spring5webapp.repositories.OrderRepository;
 import my.online.store.spring5webapp.repositories.ProductRepository;
+import my.online.store.spring5webapp.services.DiscountUtil;
+import my.online.store.spring5webapp.services.OrderService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.Date;
 
-/**
- * Created by jt on 12/23/19.
- */
 @Component
 public class BootStrapData implements CommandLineRunner {
 
-    private final OrderRepository orderRepository;
+    private final OrderController orderController;
     private final ProductRepository productRepository;
     private final LineItemRepository lineItemRepository;
+    private final OrderService orderService;
+    @Autowired
+    DiscountUtil discountUtil;
 
-    public BootStrapData(OrderRepository orderRepository, ProductRepository productRepository, LineItemRepository lineItemRepository) {
-        this.orderRepository = orderRepository;
+    public BootStrapData(ProductRepository productRepository, LineItemRepository lineItemRepository, OrderController orderController, OrderService orderService) {
         this.productRepository = productRepository;
         this.lineItemRepository = lineItemRepository;
+        this.orderController = orderController;
+        this.orderService = orderService;
     }
 
     private Product saveProduct( Product p){
         return productRepository.save(p);
     }
 
+    //will call just after the application has started up
     @Override
+    @Transactional
     public void run(String... args) throws Exception {
+        //1. first init all the mandatory properties
+        discountUtil.initItemMap();
 
+        //2. set up dummy DB
         System.out.println("Started in Bootstrap");
         Product p1 = saveProduct(new Product("sock1", new BigDecimal("10.00")));
         Product p2 = saveProduct(new Product("sock2", new BigDecimal("12.00")));
@@ -51,12 +61,7 @@ public class BootStrapData implements CommandLineRunner {
         LineItem item2 = new LineItem(p2, 3);
         o1.addLineItem(item1);
         o1.addLineItem(item2);
-        orderRepository.save(o1); //now o1 has id value, to set in lineItem
-        //now save line item when o1 has id
-        lineItemRepository.save(item1);
-        lineItemRepository.save(item2);
-        System.out.println("item1: "+ item1);
-        System.out.println("all order: "+orderRepository.findAll());
-        System.out.println("all line: "+lineItemRepository.findAll());
+        orderService.saveOrUpdateOrder(o1); //auto save all items too!
+        System.out.println("all order: "+orderService.findAll());
     }
 }

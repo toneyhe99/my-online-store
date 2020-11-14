@@ -1,13 +1,11 @@
 package my.online.store.spring5webapp.domain;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
 
-/**
- * Created by jt on 12/22/19.
- */
 @Entity
 public class Product {
 

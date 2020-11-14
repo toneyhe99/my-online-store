@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8"/>
     <title>>Order List Page</title>
+
+    <style>
+        th, td {border-style: dotted;}
+    </style>
 </head>
 <body>
 <h1>Order List</h1>
@@ -12,13 +16,29 @@
         <th>Id</th>
         <th>discount</th>
         <th>ordered date</th>
+        <th>amount</th>
+        <th>goods in detail</th>
     </tr>
     <tr th:each="order: ${orders}">
         <td th:text="${order.id}"/>
         <td th:text="${order.discount}">123</td>
         <td th:text="${order.orderedDate}">abc</td>
+        <td th:text="${order.total()}">abc</td>
+        <td>
+            <table>
+                <tr>
+                    <th>Product name</th>
+                    <th>Price</th>
+                </tr>
+                <tr th:each="item: ${order.lineItems}">
+                    <td th:text="${item.product.title}"/>
+                    <td th:text="${item.product.price}"/>
+                </tr>
+            </table>
+        </td>
     </tr>
 </table>
 
+<br/><br/><br/><div><a href="/">Back to main menu</a></div>
 </body>
 </html>

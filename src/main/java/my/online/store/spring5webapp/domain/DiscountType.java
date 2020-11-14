@@ -1,7 +1,5 @@
 package my.online.store.spring5webapp.domain;
 
-import java.math.BigDecimal;
-
 public enum DiscountType {
     Over12Items(5),
     SpecialItem2nd(10),  //but A, then buy B get 10% discount of A's price

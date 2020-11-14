@@ -15,7 +15,7 @@ public class MyOrder {
     private java.sql.Date orderedDate;
     private String status;
 
-    @OneToMany(mappedBy = "associatedOrder",  fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "associatedOrder",  cascade = CascadeType.ALL)
     private Set<LineItem> lineItems = new HashSet<>();
 
     public MyOrder() {
