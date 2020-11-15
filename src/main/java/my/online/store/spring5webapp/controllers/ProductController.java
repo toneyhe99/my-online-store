@@ -25,8 +25,10 @@ public class ProductController {
     }
 
     @RequestMapping("/products")
-    public String getBooks(Model model){
-
+    public String getBooks(HttpSession session, Model model){
+        MyOrder o = (MyOrder)session.getAttribute("myCart");
+        Integer size = o==null ? 0 : o.totalProductsCount();
+        model.addAttribute("itemCount", size);
         model.addAttribute("products", productRepository.findAll());
 
         return "products/list";
