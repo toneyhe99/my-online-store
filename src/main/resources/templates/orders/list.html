@@ -29,10 +29,12 @@
                 <tr>
                     <th>Product name</th>
                     <th>Price</th>
+                    <th>Quantity</th>
                 </tr>
                 <tr th:each="item: ${order.lineItems}">
                     <td th:text="${item.product.title}"/>
                     <td th:text="${item.product.price}"/>
+                    <td th:text="${item.quantity}"/>
                 </tr>
             </table>
         </td>

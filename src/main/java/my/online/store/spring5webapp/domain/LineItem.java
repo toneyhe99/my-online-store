@@ -1,9 +1,10 @@
 package my.online.store.spring5webapp.domain;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
-public class LineItem {
+public class LineItem implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

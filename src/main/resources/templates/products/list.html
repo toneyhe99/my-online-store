@@ -12,11 +12,20 @@
         <th>ID</th>
         <th>Title</th>
         <th>Price</th>
+        <th>To Cart</th>
     </tr>
     <tr th:each="product : ${products}">
         <td th:text="${product.id}">123</td>
         <td th:text="${product.title}"> title</td>
         <td th:text="${product.price}">price</td>
+        <td>
+            <form action="#" th:action="@{/buyProduct}" th:object="${productForm}" method="post">
+                <input type="hidden" th:value="${product.id}" name="id" />
+                <input type="hidden" th:value="${product.title}" name="title" />
+                <input type="hidden" th:value="${product.price}" name="price" />
+                <button type="submit">Buy now</button>
+            </form>
+        </td>
     </tr>
 </table>
 <br/><br/><br/><div><a href="/">Back to main menu</a></div>

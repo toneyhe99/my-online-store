@@ -1,13 +1,14 @@
 package my.online.store.spring5webapp.domain;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-public class MyOrder {
+public class MyOrder implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -72,13 +73,16 @@ public class MyOrder {
     }
 
     public BigDecimal total(){
+        return discount==null ? itemsTotal() : itemsTotal().subtract(discount);
+    }
+
+    //total without discount
+    public BigDecimal itemsTotal(){
         BigDecimal total = new BigDecimal("0");
         for(LineItem i: this.lineItems){
             total = total.add(i.getProduct().getPrice().multiply(new BigDecimal(i.getQuantity()))) ;
         }
-        System.out.println("total: "+total);
-        System.out.println("total subtract: "+total.subtract(discount));
-        return discount==null ? total : total.subtract(discount);
+        return total;
     }
 
     public BigDecimal totalForProduct(Long productId){
@@ -99,13 +103,24 @@ public class MyOrder {
         return counter;
     }
 
+    public void addOneProduct(Product product){
+        LineItem lineItem = lineItems.stream().filter(l->l.getProduct().getId()==product.getId()).findAny().orElse(null);
+        if(lineItem==null){
+            lineItem = new LineItem();
+            lineItems.add(lineItem);
+        }
+        lineItem.setProduct(product);
+        lineItem.setQuantity(lineItem.getQuantity()+1);
+        lineItem.setAssociatedOrder(this);
+    }
+
     @Override
     public String toString() {
         return "MyOrder{" +
                 "id=" + id +
                 ", discount=" + discount +
                 ", orderedDate=" + orderedDate +
-                ", lineItems=" + lineItems +
+                //", lineItems=" + lineItems +
                 '}';
     }
 }

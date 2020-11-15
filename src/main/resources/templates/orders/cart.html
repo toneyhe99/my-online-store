@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Shopping Cart</title>
+
+    <style>
+        th, td {border-style: dotted;}
+    </style>
+</head>
+<body>
+<div align="center">
+    <h1>My Cart (can not modify)</h1>
+
+    <div th:if="${myCart}">
+        <table>
+            <tr>
+                <th>Product name</th>
+                <th>Price</th>
+                <th>Quantity</th>
+            </tr>
+            <tr th:each="item: ${myCart.lineItems}">
+                <td th:text="${item.product.title}"/>
+                <td th:text="${item.product.price}"/>
+                <td th:text="${item.quantity}"/>
+            </tr>
+        </table>
+
+        <div>Discount: <span th:text="${myCart.discount}"></span></div>
+        <br/><br/><br/>
+        <div>Total: <span th:text="${myCart.total()}"></span></div>
+
+        <div>
+            <form action="#" th:action="@{/checkOutCart}" method="post"><button type="submit">Check Out</button></form>
+        </div>
+    </div>
+
+    <div th:unless="${myCart}">You do not have items in your Cart</div>
+    <br/><br/><br/><div><a href="/">Back to main menu</a></div>
+</div>
+</body>
+</html>
